@@ -1,16 +1,124 @@
-# React + Vite
+#  Dashboard Lan House System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##  Integrantes do Grupo
 
-Currently, two official plugins are available:
+- Seu nome
+- Rostand Araújo
+- Anibal Neto
+- Samuel Batista
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+#  Descrição do Sistema
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+O projeto consiste em um sistema de gerenciamento para uma lan house, desenvolvido em React.
 
-## Expanding the ESLint configuration
+O sistema permite controlar:
+- clientes conectados
+- computadores em uso
+- cadastro de produtos
+- gerenciamento básico da lan house
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+A aplicação simula o funcionamento de um sistema administrativo antes da integração com backend.
+
+---
+
+#  Tecnologias Utilizadas
+
+- React
+- JavaScript
+- React Router DOM
+- CSS
+- Vite
+- LocalStorage
+
+---
+
+# 📱 Telas Desenvolvidas
+
+##  Login
+Tela inicial do sistema com validação obrigatória dos campos de email e senha.
+
+---
+
+##  Dashboard
+Tela principal contendo:
+- quantidade de clientes conectados
+- computadores em uso
+- computadores livres
+- produtos cadastrados
+
+---
+
+##  Clientes
+Tela responsável por listar:
+- clientes conectados
+- computador utilizado
+- remoção de clientes
+
+---
+
+##  Computadores
+Tela que mostra:
+- todos os computadores cadastrados
+- status de livre ou em uso
+- cliente conectado em cada computador
+
+---
+
+##  Produtos
+Tela responsável pela listagem de produtos cadastrados e remoção de produtos.
+
+---
+
+##  Área Administrativa
+Tela utilizada para:
+- adicionar produtos
+- adicionar clientes
+- associar clientes aos computadores
+
+---
+
+#  Organização das Pastas
+
+```bash
+src/
+├── components/
+│   └── Navbar.jsx
+│
+├── pages/
+│   ├── Login.jsx
+│   ├── Dashboard.jsx
+│   ├── Clientes.jsx
+│   ├── Computadores.jsx
+│   ├── Produtos.jsx
+│   └── Admin.jsx
+│
+├── routes/
+│   └── AppRoutes.jsx
+│
+├── data/
+│   └── computadores.js
+│
+├── App.jsx
+├── App.css
+└── main.jsx
+```
+
+---
+
+# ▶ Como Rodar o Projeto
+
+## Instalar dependências
+
+```bash
+npm install
+```
+
+## Iniciar o projeto
+
+```bash
+npm run dev
+```
+
+Após iniciar, abrir o link exibido no terminal no navegador.
