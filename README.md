@@ -1,8 +1,6 @@
 #  Dashboard Lan House System
 
 ##  Integrantes do Grupo
-
-- Seu nome
 - Rostand Araújo
 - Anibal Neto
 - Samuel Batista
@@ -11,71 +9,86 @@
 
 #  Descrição do Sistema
 
-O projeto consiste em um sistema de gerenciamento para uma lan house, desenvolvido em React.
+O projeto consiste em um sistema de gerenciamento para uma lan house, desenvolvido utilizando React.
 
-O sistema permite controlar:
-- clientes conectados
-- computadores em uso
-- cadastro de produtos
-- gerenciamento básico da lan house
+O sistema permite realizar o controle de clientes e computadores, simulando o funcionamento administrativo de uma lan house moderna.
 
-A aplicação simula o funcionamento de um sistema administrativo antes da integração com backend.
+A aplicação foi criada inicialmente apenas no frontend, utilizando armazenamento local com LocalStorage para persistência dos dados.
 
 ---
 
-#  Tecnologias Utilizadas
+#  Funcionalidades do Sistema
+
+- ✅ Login com validação de email e senha
+- ✅ Dashboard com informações em tempo real
+- ✅ Cadastro de clientes
+- ✅ Associação de clientes aos computadores
+- ✅ Controle de computadores livres e em uso
+- ✅ Remoção de clientes
+- ✅ Persistência de dados utilizando LocalStorage
+- ✅ Navegação entre páginas com React Router DOM
+
+---
+
+# 🛠 Tecnologias Utilizadas
 
 - React
 - JavaScript
+- Vite
 - React Router DOM
 - CSS
-- Vite
 - LocalStorage
 
 ---
 
-# 📱 Telas Desenvolvidas
+#  Telas Desenvolvidas
 
 ##  Login
-Tela inicial do sistema com validação obrigatória dos campos de email e senha.
+
+Tela inicial do sistema contendo:
+- validação obrigatória dos campos
+- autenticação simples
+- acesso ao sistema
 
 ---
 
 ##  Dashboard
-Tela principal contendo:
+
+Tela principal contendo indicadores gerais da lan house:
+
 - quantidade de clientes conectados
 - computadores em uso
 - computadores livres
-- produtos cadastrados
 
 ---
 
 ##  Clientes
-Tela responsável por listar:
-- clientes conectados
-- computador utilizado
+
+Tela responsável pelo gerenciamento de clientes:
+
+- listagem de clientes conectados
+- computador utilizado por cada cliente
 - remoção de clientes
 
 ---
 
 ##  Computadores
-Tela que mostra:
-- todos os computadores cadastrados
+
+Tela que exibe todos os computadores cadastrados:
+
 - status de livre ou em uso
-- cliente conectado em cada computador
+- cliente conectado em cada máquina
+- monitoramento dos computadores
 
 ---
 
-##  Produtos
-Tela responsável pela listagem de produtos cadastrados e remoção de produtos.
+## ⚙ Área Administrativa
 
----
+Tela administrativa utilizada para:
 
-##  Área Administrativa
-Tela utilizada para:
-- adicionar produtos
 - adicionar clientes
 - associar clientes aos computadores
+- gerenciamento geral do sistema
 
 ---
 
@@ -84,14 +97,15 @@ Tela utilizada para:
 ```bash
 src/
 ├── components/
-│   └── Navbar.jsx
+│   ├── Navbar.jsx
+│   ├── Sidebar.jsx
+│   └── Cards.jsx
 │
 ├── pages/
 │   ├── Login.jsx
 │   ├── Dashboard.jsx
 │   ├── Clientes.jsx
 │   ├── Computadores.jsx
-│   ├── Produtos.jsx
 │   └── Admin.jsx
 │
 ├── routes/
@@ -100,25 +114,11 @@ src/
 ├── data/
 │   └── computadores.js
 │
+├── styles/
+│   ├── dashboard.css
+│   ├── sidebar.css
+│   └── global.css
+│
 ├── App.jsx
 ├── App.css
 └── main.jsx
-```
-
----
-
-# ▶ Como Rodar o Projeto
-
-## Instalar dependências
-
-```bash
-npm install
-```
-
-## Iniciar o projeto
-
-```bash
-npm run dev
-```
-
-Após iniciar, abrir o link exibido no terminal no navegador.
