@@ -106,11 +106,15 @@
   justify-content: space-between;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
   transition: transform 0.2s, box-shadow 0.2s;
-}
 
+  position: relative;
+  z-index: 1;
+}
 .pc-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.06);
+
+  z-index: 2;
 }
 
 .pc-header {

@@ -16,10 +16,7 @@ function Navbar() {
 
       <ul className="sidebar-menu">
         <li><Link to="/dashboard" title="Dashboard">📊 {!retraido && 'Dashboard'}</Link></li>
-        <li><Link to="/clientes" title="Clientes">👥 {!retraido && 'Clientes'}</Link></li>
         <li><Link to="/computadores" title="Computadores">💻 {!retraido && 'Computadores'}</Link></li>
-        <li><Link to="/produtos" title="Produtos">📦 {!retraido && 'Produtos'}</Link></li>
-        <li><Link to="/admin" title="Admin">⚙️ {!retraido && 'Admin'}</Link></li>
       </ul>
     </div>
   );

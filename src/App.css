@@ -69,20 +69,21 @@ body {
 
 .sidebar {
   position: fixed;
-
-  left: 0;
   top: 0;
+  left: 0;
 
-  width: 220px;
+  width: 240px;
   height: 100vh;
 
   background-color: #1e293b;
+  color: white;
 
-  padding: 20px;
+  transition: width 0.3s ease;
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+
+  z-index: 99999;
 }
 
 .sidebar h2 {
@@ -95,7 +96,7 @@ body {
 }
 
 .page {
-  margin-left: 240px;
+  width: 100%;
   padding: 30px;
 }
 
@@ -247,5 +248,119 @@ select {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  width: calc(100% - 70px);
+
+  margin-left: 240px;
+  width: calc(100% - 240px);
+
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== CORREÇÕES GERAIS ===== */
+
+body {
+  overflow-x: hidden;
+}
+
+/* MAIN CONTENT */
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+/* DASHBOARD */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* CARDS */
+
+.card {
+  background-color: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* COMPUTADORES */
+
+.computadores-container {
+  width: 100%;
+}
+
+.pcs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* PC CARD */
+
+.pc-card {
+  width: 100%;
+  min-height: 260px;
+  overflow: hidden;
+}
+
+/* BOTÕES */
+
+.pc-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-action {
+  flex: 1;
+}
+
+/* CONTROLS */
+
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.search-input {
+  max-width: 320px;
+}
+
+/* MODAL */
+
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .pcs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+
+  .pc-actions {
+    flex-direction: column;
+  }
 }
