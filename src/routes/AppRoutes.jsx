@@ -17,9 +17,10 @@ function Layout() {
 
   return (
     <>
-      {mostrarNavbar && <Navbar />}
+    {mostrarNavbar && <Navbar />}
 
-      <Routes>
+  <main style={{ marginLeft: mostrarNavbar ? "90px" : "0", padding: "30px" }}>
+    <Routes>
 
         <Route path="/" element={<Login />} />
 
@@ -48,8 +49,9 @@ function Layout() {
         element={<Admin />}
         />
 
-      </Routes>
-    </>
+          </Routes>
+  </main>
+</>
   );
 }
 
