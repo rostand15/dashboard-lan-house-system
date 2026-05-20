@@ -92,33 +92,34 @@ Tela administrativa utilizada para:
 
 ---
 
-#  Organização das Pastas
+# 📂 Organização das Pastas
 
 ```bash
 src/
+├── assets/
+│
 ├── components/
-│   ├── Navbar.jsx
-│   ├── Sidebar.jsx
-│   └── Cards.jsx
-│
-├── pages/
-│   ├── Login.jsx
-│   ├── Dashboard.jsx
-│   ├── Clientes.jsx
-│   ├── Computadores.jsx
-│   └── Admin.jsx
-│
-├── routes/
-│   └── AppRoutes.jsx
+│   └── Navbar.jsx
 │
 ├── data/
 │   └── computadores.js
 │
-├── styles/
-│   ├── dashboard.css
-│   ├── sidebar.css
-│   └── global.css
+├── pages/
+│   ├── Admin.jsx
+│   ├── Clientes.jsx
+│   ├── Computadores.css
+│   ├── Computadores.jsx
+│   ├── Dashboard.jsx
+│   ├── Login.jsx
+│   └── Produtos.jsx
 │
-├── App.jsx
+├── routes/
+│   └── AppRoutes.jsx
+│
+├── styles/
+│
 ├── App.css
+├── App.jsx
+├── index.css
 └── main.jsx
+```
