@@ -364,3 +364,32 @@ body {
     flex-direction: column;
   }
 }
+.alimentos-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 25px 0;
+}
+
+.alimentos-form input,
+.alimentos-form select {
+  width: 220px;
+}
+
+.alimentos-form button {
+  height: 40px;
+}
+
+@media (max-width: 768px) {
+  .alimentos-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .alimentos-form input,
+  .alimentos-form select,
+  .alimentos-form button {
+    width: 100%;
+  }
+}

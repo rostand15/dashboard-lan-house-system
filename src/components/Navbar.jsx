@@ -1,24 +1,45 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
-
   const [retraido, setRetraido] = useState(true);
 
   return (
-    <div className={`sidebar ${retraido ? 'retraido' : ''}`}>
+    <aside className={retraido ? "sidebar retraido" : "sidebar"}>
       <div className="sidebar-header">
-        <button className="toggle-btn" onClick={() => setRetraido(!retraido)}>
+        <button
+          className="toggle-btn"
+          onClick={() => setRetraido(!retraido)}
+        >
           ☰
         </button>
-        {!retraido && <h2 className="logo-text">Lan House</h2>}
+
+        {!retraido && <h2>Lan House</h2>}
       </div>
 
       <ul className="sidebar-menu">
-        <li><Link to="/dashboard" title="Dashboard">📊 {!retraido && 'Dashboard'}</Link></li>
-        <li><Link to="/computadores" title="Computadores">💻 {!retraido && 'Computadores'}</Link></li>
+        <li>
+          <Link to="/dashboard">
+            <span>🏠</span>
+            {!retraido && <span>Dashboard</span>}
+          </Link>
+        </li>
+
+        <li>
+          <Link to="/computadores">
+            <span>💻</span>
+            {!retraido && <span>Computadores</span>}
+          </Link>
+        </li>
+
+        <li>
+          <Link to="/alimentos">
+            <span>🍔</span>
+            {!retraido && <span>Alimentos</span>}
+          </Link>
+        </li>
       </ul>
-    </div>
+    </aside>
   );
 }
 
