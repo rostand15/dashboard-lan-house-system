@@ -21,12 +21,13 @@ A aplicação foi criada inicialmente apenas no frontend, utilizando armazenamen
 
 - ✅ Login com validação de email e senha
 - ✅ Dashboard com informações em tempo real
-- ✅ Cadastro de clientes
-- ✅ Associação de clientes aos computadores
 - ✅ Controle de computadores livres e em uso
-- ✅ Remoção de clientes
 - ✅ Persistência de dados utilizando LocalStorage
 - ✅ Navegação entre páginas com React Router DOM
+- ✅ Cadastro e gerenciamento de produtos alimentícios
+- ✅ Busca e filtro de produtos alimentícios
+- ✅ Controle de estoque
+- ✅ Venda de produtos com baixa automática no estoque
 
 ---
 
@@ -62,16 +63,6 @@ Tela principal contendo indicadores gerais da lan house:
 
 ---
 
-##  Clientes
-
-Tela responsável pelo gerenciamento de clientes:
-
-- listagem de clientes conectados
-- computador utilizado por cada cliente
-- remoção de clientes
-
----
-
 ##  Computadores
 
 Tela que exibe todos os computadores cadastrados:
@@ -82,17 +73,13 @@ Tela que exibe todos os computadores cadastrados:
 
 ---
 
-## ⚙ Área Administrativa
+### Produtos Alimentícios
 
-Tela administrativa utilizada para:
+- Cadastro e gerenciamento de produtos alimentícios
+- Controle de estoque dos produtos alimentícios
+- Venda de produtos com baixa automática no estoque
 
-- adicionar clientes
-- associar clientes aos computadores
-- gerenciamento geral do sistema
-
----
-
-# 📂 Organização das Pastas
+## 📁 Organização das Pastas
 
 ```bash
 src/
@@ -106,6 +93,8 @@ src/
 │
 ├── pages/
 │   ├── Admin.jsx
+│   ├── Alimentos.css
+│   ├── Alimentos.jsx
 │   ├── Clientes.jsx
 │   ├── Computadores.css
 │   ├── Computadores.jsx
@@ -115,8 +104,6 @@ src/
 │
 ├── routes/
 │   └── AppRoutes.jsx
-│
-├── styles/
 │
 ├── App.css
 ├── App.jsx
