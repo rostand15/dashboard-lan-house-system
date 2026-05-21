@@ -14,7 +14,7 @@ function Navbar() {
           ☰
         </button>
 
-        {!retraido && <h2>Lan House</h2>}
+        {!retraido && <h2 className="sidebar-title">Lan House</h2>}
       </div>
 
       <ul className="sidebar-menu">
@@ -28,7 +28,7 @@ function Navbar() {
         <li>
           <Link to="/computadores">
             <span>💻</span>
-            {!retraido && <span>Computadores</span>}
+            {!retraido && <span>Máquinas</span>}
           </Link>
         </li>
 
