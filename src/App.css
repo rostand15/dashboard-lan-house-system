@@ -370,6 +370,7 @@ select {
 
 .filter-btn {
   background-color: #334155;
+  color: white;
 }
 
 .filter-btn.active {
@@ -378,6 +379,9 @@ select {
 
 .btn-add {
   background-color: #22c55e;
+  width: auto;
+  flex: none;
+  padding: 10px 18px;
 }
 
 .produto-actions {
@@ -431,6 +435,15 @@ select {
   max-width: 90%;
   max-height: 90vh;
   overflow-y: auto;
+  color: white;
+}
+
+.modal-content h1,
+.modal-content h2,
+.modal-content h3,
+.modal-content p,
+.modal-content label {
+  color: white;
 }
 
 .modal-content form {
@@ -442,6 +455,16 @@ select {
 .modal-content input,
 .modal-content select {
   width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #334155;
+  color: white;
+  outline: none;
+}
+
+.modal-content input::placeholder {
+  color: #cbd5e1;
 }
 
 .modal-actions {
@@ -452,6 +475,20 @@ select {
 
 .modal-actions button {
   flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.modal-actions button:first-child {
+  background-color: #64748b;
+}
+
+.modal-actions button:last-child {
+  background-color: #22c55e;
 }
 
 /* RESPONSIVIDADE */
