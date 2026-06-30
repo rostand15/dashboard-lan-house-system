@@ -14,6 +14,10 @@ const AlimentoSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    categoria: {
+      type: String,
+      default: "alimento",
+    },
   },
   {
     timestamps: true,

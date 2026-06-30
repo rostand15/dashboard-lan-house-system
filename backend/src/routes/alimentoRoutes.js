@@ -5,6 +5,7 @@ const alimentoController = require("../controllers/alimentoController");
 
 router.get("/", alimentoController.listarAlimentos);
 router.post("/", alimentoController.criarAlimento);
+router.put("/:id", alimentoController.atualizarAlimento);
 router.delete("/:id", alimentoController.removerAlimento);
 
 module.exports = router;

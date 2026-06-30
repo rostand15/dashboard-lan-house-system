@@ -2,25 +2,38 @@ import React, { useEffect, useState } from "react";
 import "./Alimentos.css";
 
 function Alimentos() {
-  const [produtos, setProdutos] = useState(() => {
-    const saved = localStorage.getItem("produtosAlimenticios");
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  const [produtos, setProdutos] = useState([]);
   const [busca, setBusca] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("todos");
   const [modalAberto, setModalAberto] = useState(false);
   const [produtoEmEdicao, setProdutoEmEdicao] = useState(null);
 
+  const API_URL = "http://localhost:3001";
+
+  const carregarAlimentos = async () => {
+    try {
+      const resposta = await fetch(`${API_URL}/alimentos`);
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        throw new Error(dados.erro || "Erro ao carregar alimentos");
+      }
+
+      setProdutos(dados);
+    } catch (error) {
+      console.error("Erro ao carregar alimentos:", error);
+      alert("Não foi possível carregar os alimentos.");
+    }
+  };
+
   useEffect(() => {
-    localStorage.setItem("produtosAlimenticios", JSON.stringify(produtos));
-  }, [produtos]);
+    carregarAlimentos();
+  }, []);
 
   const novoProdutoVazio = {
-    id: Date.now(),
     nome: "",
     preco: "",
-    estoque: "",
+    quantidade: "",
     categoria: "alimento",
   };
 
@@ -34,58 +47,120 @@ function Alimentos() {
     setModalAberto(true);
   };
 
-  const salvarProduto = (e) => {
+  const salvarProduto = async (e) => {
     e.preventDefault();
 
     if (
       !produtoEmEdicao.nome ||
       !produtoEmEdicao.preco ||
-      !produtoEmEdicao.estoque
+      !produtoEmEdicao.quantidade
     ) {
       alert("Preencha todos os campos.");
       return;
     }
 
-    const produtoFormatado = {
-      ...produtoEmEdicao,
+    const dadosProduto = {
+      nome: produtoEmEdicao.nome,
       preco: Number(produtoEmEdicao.preco),
-      estoque: Number(produtoEmEdicao.estoque),
+      quantidade: Number(produtoEmEdicao.quantidade),
+      categoria: produtoEmEdicao.categoria || "alimento",
     };
 
-    const produtoJaExiste = produtos.some(
-      (produto) => produto.id === produtoFormatado.id
-    );
+    try {
+      let resposta;
 
-    if (produtoJaExiste) {
-      setProdutos((prev) =>
-        prev.map((produto) =>
-          produto.id === produtoFormatado.id ? produtoFormatado : produto
-        )
-      );
-    } else {
-      setProdutos((prev) => [...prev, produtoFormatado]);
+      if (produtoEmEdicao._id) {
+        resposta = await fetch(`${API_URL}/alimentos/${produtoEmEdicao._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dadosProduto),
+        });
+      } else {
+        resposta = await fetch(`${API_URL}/alimentos`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dadosProduto),
+        });
+      }
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        alert(dados.erro || "Erro ao salvar produto.");
+        return;
+      }
+
+      setModalAberto(false);
+      setProdutoEmEdicao(null);
+      carregarAlimentos();
+    } catch (error) {
+      console.error("Erro ao salvar produto:", error);
+      alert("Erro de conexão com o servidor.");
     }
-
-    setModalAberto(false);
-    setProdutoEmEdicao(null);
   };
 
-  const removerProduto = (id) => {
+  const removerProduto = async (id) => {
     const confirmar = window.confirm("Deseja remover este produto?");
 
     if (!confirmar) return;
 
-    setProdutos((prev) => prev.filter((produto) => produto.id !== id));
+    try {
+      const resposta = await fetch(`${API_URL}/alimentos/${id}`, {
+        method: "DELETE",
+      });
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        alert(dados.erro || "Erro ao remover produto.");
+        return;
+      }
+
+      carregarAlimentos();
+    } catch (error) {
+      console.error("Erro ao remover produto:", error);
+      alert("Erro ao remover produto.");
+    }
   };
 
-  const baixarEstoque = (id) => {
-    setProdutos((prev) =>
-      prev.map((produto) =>
-        produto.id === id && produto.estoque > 0
-          ? { ...produto, estoque: produto.estoque - 1 }
-          : produto
-      )
-    );
+  const baixarEstoque = async (produto) => {
+    const quantidade = Number(prompt("Quantidade vendida:"));
+
+    if (!quantidade || quantidade <= 0) {
+      alert("Quantidade inválida.");
+      return;
+    }
+
+    try {
+      const resposta = await fetch(`${API_URL}/vendas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          alimentoId: produto._id,
+          quantidade,
+          formaPagamento: "Dinheiro",
+        }),
+      });
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        alert(dados.erro || "Erro ao registrar venda.");
+        return;
+      }
+
+      alert("Venda registrada com sucesso!");
+      carregarAlimentos();
+    } catch (error) {
+      console.error("Erro ao vender produto:", error);
+      alert("Erro de conexão com o servidor.");
+    }
   };
 
   const formatarCategoria = (categoria) => {
@@ -98,21 +173,24 @@ function Alimentos() {
   };
 
   const produtosFiltrados = produtos.filter((produto) => {
+    const nome = produto.nome || "";
+    const categoria = produto.categoria || "";
+
     const bateBusca =
-      produto.nome.toLowerCase().includes(busca.toLowerCase()) ||
-      produto.categoria.toLowerCase().includes(busca.toLowerCase());
+      nome.toLowerCase().includes(busca.toLowerCase()) ||
+      categoria.toLowerCase().includes(busca.toLowerCase());
 
     const bateCategoria =
-      filtroCategoria === "todos" || produto.categoria === filtroCategoria;
+      filtroCategoria === "todos" || categoria === filtroCategoria;
 
     return bateBusca && bateCategoria;
   });
 
   return (
-    <div className="page alimentos-container">
-      <h2>Produtos Alimentícios</h2>
+    <main className="alimentos-container">
+      <div className="alimentos-header">
+        <h1>Produtos Alimentícios</h1>
 
-      <div className="controls-bar">
         <input
           type="text"
           placeholder="Buscar produto..."
@@ -121,7 +199,7 @@ function Alimentos() {
           className="search-input"
         />
 
-        <div className="filter-group">
+        <div className="filters">
           <button
             onClick={() => setFiltroCategoria("todos")}
             className={`filter-btn ${
@@ -168,20 +246,20 @@ function Alimentos() {
           </button>
         </div>
 
-        <button onClick={abrirCadastro} className="btn-action btn-add">
+        <button onClick={abrirCadastro} className="add-btn">
           Adicionar Produto
         </button>
       </div>
 
-      <div className="alimentos-grid">
+      <section className="produtos-lista">
         {produtosFiltrados.length === 0 ? (
           <p>Nenhum produto cadastrado.</p>
         ) : (
           produtosFiltrados.map((produto) => (
-            <div key={produto.id} className="card alimento-card">
-              <div className="card-header">
+            <div className="produto-card" key={produto._id}>
+              <div className="produto-topo">
                 <h3>{produto.nome}</h3>
-                <span className="categoria-badge">
+                <span className="categoria-tag">
                   {formatarCategoria(produto.categoria)}
                 </span>
               </div>
@@ -191,13 +269,13 @@ function Alimentos() {
               </p>
 
               <p>
-                <strong>Estoque:</strong> {produto.estoque} unidade(s)
+                <strong>Estoque:</strong> {produto.quantidade} unidade(s)
               </p>
 
-              {produto.estoque > 0 ? (
-                <p className="status-disponivel">Disponível para venda</p>
+              {produto.quantidade > 0 ? (
+                <p className="disponivel">Disponível para venda</p>
               ) : (
-                <p className="status-esgotado">Produto esgotado</p>
+                <p className="esgotado">Produto esgotado</p>
               )}
 
               <div className="produto-actions">
@@ -209,15 +287,15 @@ function Alimentos() {
                 </button>
 
                 <button
-                  onClick={() => baixarEstoque(produto.id)}
+                  onClick={() => baixarEstoque(produto)}
                   className="btn-action btn-sale"
-                  disabled={produto.estoque <= 0}
+                  disabled={produto.quantidade <= 0}
                 >
                   Vender
                 </button>
 
                 <button
-                  onClick={() => removerProduto(produto.id)}
+                  onClick={() => removerProduto(produto._id)}
                   className="btn-action btn-delete"
                 >
                   Remover
@@ -226,16 +304,14 @@ function Alimentos() {
             </div>
           ))
         )}
-      </div>
+      </section>
 
       {modalAberto && produtoEmEdicao && (
         <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>
-              {produtos.some((produto) => produto.id === produtoEmEdicao.id)
-                ? "Modificar Produto"
-                : "Adicionar Produto"}
-            </h3>
+          <div className="modal">
+            <h2>
+              {produtoEmEdicao._id ? "Modificar Produto" : "Adicionar Produto"}
+            </h2>
 
             <form onSubmit={salvarProduto}>
               <label>Nome do produto</label>
@@ -268,11 +344,11 @@ function Alimentos() {
               <label>Estoque</label>
               <input
                 type="number"
-                value={produtoEmEdicao.estoque}
+                value={produtoEmEdicao.quantidade}
                 onChange={(e) =>
                   setProdutoEmEdicao({
                     ...produtoEmEdicao,
-                    estoque: e.target.value,
+                    quantidade: e.target.value,
                   })
                 }
                 required
@@ -306,7 +382,7 @@ function Alimentos() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }
 
