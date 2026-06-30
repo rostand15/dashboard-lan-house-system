@@ -1,19 +1,19 @@
 const express = require("express");
 const cors = require("cors");
 
+const vendaRoutes = require("./routes/vendaRoutes");
+const alimentoRoutes = require("./routes/alimentoRoutes");
+
 const app = express();
 
-// middlewares
 app.use(cors());
 app.use(express.json());
 
-// rotas
-const authRoutes = require("./routes/authRoutes");
-app.use("/auth", authRoutes);
+app.use("/vendas", vendaRoutes);
+app.use("/alimentos", alimentoRoutes);
 
-// rota teste
 app.get("/", (req, res) => {
-  res.send("API da Lan House rodando ");
+  res.send("API da Lan House rodando");
 });
 
 module.exports = app;

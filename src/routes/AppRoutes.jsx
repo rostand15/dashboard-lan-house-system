@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Computadores from "../pages/Computadores";
 import Alimentos from "../pages/Alimentos";
+import Vendas from "../pages/Vendas";
 
 import Navbar from "../components/Navbar";
 
@@ -22,6 +23,7 @@ function Layout() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/computadores" element={<Computadores />} />
               <Route path="/alimentos" element={<Alimentos />} />
+              <Route path="/vendas" element={<Vendas />} />
             </Routes>
           </main>
         </div>
