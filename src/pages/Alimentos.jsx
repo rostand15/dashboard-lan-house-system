@@ -47,6 +47,11 @@ function Alimentos() {
     setModalAberto(true);
   };
 
+  const fecharModal = () => {
+    setModalAberto(false);
+    setProdutoEmEdicao(null);
+  };
+
   const salvarProduto = async (e) => {
     e.preventDefault();
 
@@ -94,8 +99,7 @@ function Alimentos() {
         return;
       }
 
-      setModalAberto(false);
-      setProdutoEmEdicao(null);
+      fecharModal();
       carregarAlimentos();
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
@@ -127,42 +131,6 @@ function Alimentos() {
     }
   };
 
-  const baixarEstoque = async (produto) => {
-    const quantidade = Number(prompt("Quantidade vendida:"));
-
-    if (!quantidade || quantidade <= 0) {
-      alert("Quantidade inválida.");
-      return;
-    }
-
-    try {
-      const resposta = await fetch(`${API_URL}/vendas`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          alimentoId: produto._id,
-          quantidade,
-          formaPagamento: "Dinheiro",
-        }),
-      });
-
-      const dados = await resposta.json();
-
-      if (!resposta.ok) {
-        alert(dados.erro || "Erro ao registrar venda.");
-        return;
-      }
-
-      alert("Venda registrada com sucesso!");
-      carregarAlimentos();
-    } catch (error) {
-      console.error("Erro ao vender produto:", error);
-      alert("Erro de conexão com o servidor.");
-    }
-  };
-
   const formatarCategoria = (categoria) => {
     if (categoria === "alimento") return "Alimento";
     if (categoria === "bebida") return "Bebida";
@@ -186,193 +154,252 @@ function Alimentos() {
     return bateBusca && bateCategoria;
   });
 
+  const totalProdutos = produtos.length;
+
+  const totalUnidades = produtos.reduce((total, produto) => {
+    return total + Number(produto.quantidade || 0);
+  }, 0);
+
+  const valorTotalEstoque = produtos.reduce((total, produto) => {
+    return total + Number(produto.preco || 0) * Number(produto.quantidade || 0);
+  }, 0);
+
   return (
     <main className="alimentos-container">
-      <div className="alimentos-header">
-        <h1>Produtos Alimentícios</h1>
+      <section className="alimentos-content">
+        <div className="alimentos-header">
+          <div>
+            <h1>Produtos Alimentícios</h1>
+            <p>Cadastre e gerencie os produtos disponíveis para venda.</p>
+          </div>
 
-        <input
-          type="text"
-          placeholder="Buscar produto..."
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          className="search-input"
-        />
-
-        <div className="filters">
-          <button
-            onClick={() => setFiltroCategoria("todos")}
-            className={`filter-btn ${
-              filtroCategoria === "todos" ? "active" : ""
-            }`}
-          >
-            Todos
-          </button>
-
-          <button
-            onClick={() => setFiltroCategoria("alimento")}
-            className={`filter-btn ${
-              filtroCategoria === "alimento" ? "active" : ""
-            }`}
-          >
-            Alimentos
-          </button>
-
-          <button
-            onClick={() => setFiltroCategoria("bebida")}
-            className={`filter-btn ${
-              filtroCategoria === "bebida" ? "active" : ""
-            }`}
-          >
-            Bebidas
-          </button>
-
-          <button
-            onClick={() => setFiltroCategoria("doce")}
-            className={`filter-btn ${
-              filtroCategoria === "doce" ? "active" : ""
-            }`}
-          >
-            Doces
-          </button>
-
-          <button
-            onClick={() => setFiltroCategoria("salgado")}
-            className={`filter-btn ${
-              filtroCategoria === "salgado" ? "active" : ""
-            }`}
-          >
-            Salgados
+          <button onClick={abrirCadastro} className="add-btn">
+            Adicionar Produto
           </button>
         </div>
 
-        <button onClick={abrirCadastro} className="add-btn">
-          Adicionar Produto
-        </button>
-      </div>
+        <section className="alimentos-cards">
+          <div className="resumo-card">
+            <span>Produtos cadastrados</span>
+            <strong>{totalProdutos}</strong>
+          </div>
 
-      <section className="produtos-lista">
-        {produtosFiltrados.length === 0 ? (
-          <p>Nenhum produto cadastrado.</p>
-        ) : (
-          produtosFiltrados.map((produto) => (
-            <div className="produto-card" key={produto._id}>
-              <div className="produto-topo">
-                <h3>{produto.nome}</h3>
-                <span className="categoria-tag">
-                  {formatarCategoria(produto.categoria)}
-                </span>
-              </div>
+          <div className="resumo-card">
+            <span>Unidades em estoque</span>
+            <strong>{totalUnidades}</strong>
+          </div>
 
-              <p>
-                <strong>Preço:</strong> R$ {Number(produto.preco).toFixed(2)}
-              </p>
+          <div className="resumo-card">
+            <span>Valor em estoque</span>
+            <strong>R$ {valorTotalEstoque.toFixed(2)}</strong>
+          </div>
+        </section>
 
-              <p>
-                <strong>Estoque:</strong> {produto.quantidade} unidade(s)
-              </p>
+        <section className="alimentos-filtros">
+          <input
+            type="text"
+            placeholder="Buscar produto..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="search-input"
+          />
 
-              {produto.quantidade > 0 ? (
-                <p className="disponivel">Disponível para venda</p>
-              ) : (
-                <p className="esgotado">Produto esgotado</p>
-              )}
+          <div className="filters">
+            <button
+              onClick={() => setFiltroCategoria("todos")}
+              className={`filter-btn ${
+                filtroCategoria === "todos" ? "active" : ""
+              }`}
+            >
+              Todos
+            </button>
 
-              <div className="produto-actions">
-                <button
-                  onClick={() => abrirEdicao(produto)}
-                  className="btn-action btn-edit"
-                >
-                  Modificar
-                </button>
+            <button
+              onClick={() => setFiltroCategoria("alimento")}
+              className={`filter-btn ${
+                filtroCategoria === "alimento" ? "active" : ""
+              }`}
+            >
+              Alimentos
+            </button>
 
-                <button
-                  onClick={() => baixarEstoque(produto)}
-                  className="btn-action btn-sale"
-                  disabled={produto.quantidade <= 0}
-                >
-                  Vender
-                </button>
+            <button
+              onClick={() => setFiltroCategoria("bebida")}
+              className={`filter-btn ${
+                filtroCategoria === "bebida" ? "active" : ""
+              }`}
+            >
+              Bebidas
+            </button>
 
-                <button
-                  onClick={() => removerProduto(produto._id)}
-                  className="btn-action btn-delete"
-                >
-                  Remover
-                </button>
-              </div>
+            <button
+              onClick={() => setFiltroCategoria("doce")}
+              className={`filter-btn ${
+                filtroCategoria === "doce" ? "active" : ""
+              }`}
+            >
+              Doces
+            </button>
+
+            <button
+              onClick={() => setFiltroCategoria("salgado")}
+              className={`filter-btn ${
+                filtroCategoria === "salgado" ? "active" : ""
+              }`}
+            >
+              Salgados
+            </button>
+          </div>
+        </section>
+
+        <section className="produtos-lista">
+          {produtosFiltrados.length === 0 ? (
+            <div className="sem-produtos">
+              <h2>Nenhum produto cadastrado</h2>
+              <p>Clique em “Adicionar Produto” para cadastrar o primeiro item.</p>
             </div>
-          ))
-        )}
+          ) : (
+            produtosFiltrados.map((produto) => (
+              <div className="produto-card" key={produto._id}>
+                <div className="produto-topo">
+                  <div>
+                    <h3>{produto.nome}</h3>
+                    <p className="produto-codigo">ID: {produto._id}</p>
+                  </div>
+
+                  <span className="categoria-tag">
+                    {formatarCategoria(produto.categoria)}
+                  </span>
+                </div>
+
+                <div className="produto-info">
+                  <div>
+                    <span>Preço</span>
+                    <strong>R$ {Number(produto.preco).toFixed(2)}</strong>
+                  </div>
+
+                  <div>
+                    <span>Estoque</span>
+                    <strong>{produto.quantidade} unidade(s)</strong>
+                  </div>
+
+                  <div>
+                    <span>Status</span>
+                    {produto.quantidade > 0 ? (
+                      <strong className="disponivel">Disponível</strong>
+                    ) : (
+                      <strong className="esgotado">Esgotado</strong>
+                    )}
+                  </div>
+                </div>
+
+                <div className="produto-actions">
+                  <button
+                    onClick={() => abrirEdicao(produto)}
+                    className="btn-action btn-edit"
+                  >
+                    Modificar
+                  </button>
+
+                  <button
+                    onClick={() => removerProduto(produto._id)}
+                    className="btn-action btn-delete"
+                  >
+                    Remover
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </section>
       </section>
 
       {modalAberto && produtoEmEdicao && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>
-              {produtoEmEdicao._id ? "Modificar Produto" : "Adicionar Produto"}
-            </h2>
+            <div className="modal-header">
+              <div>
+                <h2>
+                  {produtoEmEdicao._id
+                    ? "Modificar Produto"
+                    : "Adicionar Produto"}
+                </h2>
+                <p>Preencha as informações do produto alimentício.</p>
+              </div>
+
+              <button type="button" onClick={fecharModal} className="modal-close">
+                ×
+              </button>
+            </div>
 
             <form onSubmit={salvarProduto}>
-              <label>Nome do produto</label>
-              <input
-                type="text"
-                value={produtoEmEdicao.nome}
-                onChange={(e) =>
-                  setProdutoEmEdicao({
-                    ...produtoEmEdicao,
-                    nome: e.target.value,
-                  })
-                }
-                required
-              />
+              <div className="campo">
+                <label>Nome do produto</label>
+                <input
+                  type="text"
+                  value={produtoEmEdicao.nome}
+                  onChange={(e) =>
+                    setProdutoEmEdicao({
+                      ...produtoEmEdicao,
+                      nome: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
 
-              <label>Preço</label>
-              <input
-                type="number"
-                step="0.01"
-                value={produtoEmEdicao.preco}
-                onChange={(e) =>
-                  setProdutoEmEdicao({
-                    ...produtoEmEdicao,
-                    preco: e.target.value,
-                  })
-                }
-                required
-              />
+              <div className="campo">
+                <label>Preço</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={produtoEmEdicao.preco}
+                  onChange={(e) =>
+                    setProdutoEmEdicao({
+                      ...produtoEmEdicao,
+                      preco: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
 
-              <label>Estoque</label>
-              <input
-                type="number"
-                value={produtoEmEdicao.quantidade}
-                onChange={(e) =>
-                  setProdutoEmEdicao({
-                    ...produtoEmEdicao,
-                    quantidade: e.target.value,
-                  })
-                }
-                required
-              />
+              <div className="campo">
+                <label>Estoque</label>
+                <input
+                  type="number"
+                  value={produtoEmEdicao.quantidade}
+                  onChange={(e) =>
+                    setProdutoEmEdicao({
+                      ...produtoEmEdicao,
+                      quantidade: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
 
-              <label>Categoria</label>
-              <select
-                value={produtoEmEdicao.categoria}
-                onChange={(e) =>
-                  setProdutoEmEdicao({
-                    ...produtoEmEdicao,
-                    categoria: e.target.value,
-                  })
-                }
-              >
-                <option value="alimento">Alimento</option>
-                <option value="bebida">Bebida</option>
-                <option value="doce">Doce</option>
-                <option value="salgado">Salgado</option>
-                <option value="outros">Outros</option>
-              </select>
+              <div className="campo">
+                <label>Categoria</label>
+                <select
+                  value={produtoEmEdicao.categoria}
+                  onChange={(e) =>
+                    setProdutoEmEdicao({
+                      ...produtoEmEdicao,
+                      categoria: e.target.value,
+                    })
+                  }
+                >
+                  <option value="alimento">Alimento</option>
+                  <option value="bebida">Bebida</option>
+                  <option value="doce">Doce</option>
+                  <option value="salgado">Salgado</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
 
               <div className="modal-actions">
-                <button type="button" onClick={() => setModalAberto(false)}>
+                <button type="button" onClick={fecharModal}>
                   Cancelar
                 </button>
 
